@@ -1,0 +1,13 @@
+@host = http://localhost:5176
+@apiPrefix = /api/auth
+
+### 管理员账号登录
+POST {{host}}{{apiPrefix}}/user/basic-login
+Content-Type: application/json
+
+{
+  "account":"admin",
+  "password":"password",
+  "imageCode":"1234",
+  "imageCodeToken":"456"
+}

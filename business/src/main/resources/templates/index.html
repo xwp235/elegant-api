@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>推送消息</h1>
+<br/>
+<div id="sseText"></div>
+<br/>
+<button type="button" onclick="loginUserAction()">管理员登录</button>
+<button type="button" onclick="testGetUserAction()">测试管理员登录后认证是否有效</button>
+<button type="button" onclick="loginMemberAction()">普通用户登录</button>
+<button type="button" onclick="logoutUserAction()">管理员退出登录</button>
+<button type="button" onclick="connect()">websocket连接</button>
+<button type="button" onclick="disconnect()">websocket断开连接</button>
+<button type="button" onclick="openMemberSse()">连接Member sse</button>
+<button type="button" onclick="sendSseMessageToLoginUser()">广播推送消息</button>
+<button type="button" onclick="closeMemberSse()">关闭Member sse</button>
+<button type="button" onclick="test1()">测试接口1</button>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/1.7.2/axios.min.js"></script>
+<script>
+  const loginUserAction = () => {
+    axios.post('/api/auth/user/basic-login', {
+      "account": "admin",
+      "password": "password",
+      "imageCode": "1234",
+      "imageCodeToken": "456"
+    }).then(rs => {
+      console.log('管理员登录成功')
+    })
+  }
+  const testGetUserAction = () => {
+    axios.get('/api/user/1').then(rs => {
+    })
+  }
+  const logoutUserAction = () => {
+    axios.post('/api/user/logout')
+  }
+  const loginMemberAction = () => {
+    axios.post('/api/auth/member/basic-login', {
+      "account": "admin",
+      "password": "password",
+      "imageCode": "1234",
+      "imageCodeToken": "456"
+    }).then(rs => {
+      console.log('普通用户登录成功')
+    })
+  }
+  const test1 = () => {
+    axios.get("/api/test/1")
+  }
+
+  let socket
+  function connect() {
+    socket = new WebSocket('ws://localhost:5176/ws');
+
+    socket.onopen = function() {
+      console.log('WebSocket connection opened');
+    };
+
+    socket.onmessage = function(event) {
+      console.log('Message from server: ' + event.data);
+    };
+
+    socket.onclose = function() {
+      console.log('WebSocket connection closed');
+    };
+
+    socket.onerror = function(e) {
+      console.error('WebSocket error occurred:',e)
+    }
+  }
+
+  function disconnect() {
+    if (socket) {
+      socket.close()
+    }
+  }
+
+  const sseText = document.getElementById('sseText')
+  let source
+  function openMemberSse() {
+    source = new EventSource('http://localhost:5176/api/sse/member/open');
+    source.onmessage = function (event) {
+      let text = sseText.innerText
+      text += '\n' + event.data
+      sseText.innerText = text
+    }
+    source.onopen = function (event) {
+      console.log(event)
+      console.log('开启服务端推送')
+    }
+    source.onerror = function(e) {
+      console.log(e)
+      console.log('关闭服务端推送')
+      source.close()
+    }
+  }
+
+  function closeMemberSse() {
+    if (source) {
+      source.close()
+    }
+    axios.get('/api/sse/member/close').then(rs => {
+      console.log('关闭推送消息')
+    })
+  }
+
+  function sendSseMessageToLoginUser() {
+    axios.post('/api/sse/broadcast', {
+      "group":"user",
+      "message":"123"
+    }).then(rs => {
+      console.log('推送消息成功')
+    })
+  }
+
+  window.addEventListener('beforeunload', function() {
+    disconnect()
+    closeSse()
+  })
+
+  // Listen for online and offline events
+  window.addEventListener('online', function() {
+    console.log("You are online");
+    // Optionally, reconnect the WebSocket if it was disconnected
+    // if (socket && socket.readyState === WebSocket.CLOSED) {
+    //   connect()
+    // }
+  });
+
+  window.addEventListener('offline', function() {
+    console.log("You are offline");
+    disconnect()
+  })
+  //
+  // window.addEventListener('load', function() {
+  //   connect();
+  // });
+</script>
+</body>
+</html>
