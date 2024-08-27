@@ -23,7 +23,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @EnableScheduling
 @Configuration
-@MapperScan(basePackages = "jp.onehr.elegantapi.modules.core.mapper")
+@MapperScan(basePackages = {
+        "jp.onehr.elegantapi.modules.core.mapper",
+        "jp.onehr.elegantapi.bpm.mybatis.mapper"
+})
 public class BeanConfig {
 
     @Bean

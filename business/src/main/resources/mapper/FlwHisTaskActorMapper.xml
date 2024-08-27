@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.onehr.elegantapi.bpm.mybatis.mapper.FlwHisTaskActorMapper">
+  <resultMap id="BaseResultMap" type="jp.onehr.elegantapi.bpm.engine.entity.FlwHisTaskActor">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="instance_id" jdbcType="BIGINT" property="instanceId" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="actor_id" jdbcType="VARCHAR" property="actorId" />
+    <result column="actor_name" jdbcType="VARCHAR" property="actorName" />
+    <result column="actor_type" jdbcType="INTEGER" property="actorType" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+    <result column="agent_id" jdbcType="VARCHAR" property="agentId" />
+    <result column="agent_type" jdbcType="INTEGER" property="agentType" />
+    <result column="extend" jdbcType="VARCHAR" property="extend" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, tenant_id, instance_id, task_id, actor_id, actor_name, actor_type, weight, agent_id,
+    agent_type, extend
+  </sql>
+  <select id="selectByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwHisTaskActorExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from flw_his_task_actor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from flw_his_task_actor
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from flw_his_task_actor
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwHisTaskActorExample">
+    delete from flw_his_task_actor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwHisTaskActor">
+    insert into flw_his_task_actor (id, tenant_id, instance_id,
+      task_id, actor_id, actor_name,
+      actor_type, weight, agent_id,
+      agent_type, extend)
+    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=VARCHAR}, #{instanceId,jdbcType=BIGINT},
+      #{taskId,jdbcType=BIGINT}, #{actorId,jdbcType=VARCHAR}, #{actorName,jdbcType=VARCHAR},
+      #{actorType,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER}, #{agentId,jdbcType=VARCHAR},
+      #{agentType,jdbcType=INTEGER}, #{extend,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwHisTaskActor">
+    insert into flw_his_task_actor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="instanceId != null">
+        instance_id,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="actorId != null">
+        actor_id,
+      </if>
+      <if test="actorName != null">
+        actor_name,
+      </if>
+      <if test="actorType != null">
+        actor_type,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="agentId != null">
+        agent_id,
+      </if>
+      <if test="agentType != null">
+        agent_type,
+      </if>
+      <if test="extend != null">
+        extend,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceId != null">
+        #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="actorId != null">
+        #{actorId,jdbcType=VARCHAR},
+      </if>
+      <if test="actorName != null">
+        #{actorName,jdbcType=VARCHAR},
+      </if>
+      <if test="actorType != null">
+        #{actorType,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentType != null">
+        #{agentType,jdbcType=INTEGER},
+      </if>
+      <if test="extend != null">
+        #{extend,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwHisTaskActorExample" resultType="java.lang.Long">
+    select count(*) from flw_his_task_actor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update flw_his_task_actor
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.tenantId != null">
+        tenant_id = #{row.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.instanceId != null">
+        instance_id = #{row.instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.taskId != null">
+        task_id = #{row.taskId,jdbcType=BIGINT},
+      </if>
+      <if test="row.actorId != null">
+        actor_id = #{row.actorId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.actorName != null">
+        actor_name = #{row.actorName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.actorType != null">
+        actor_type = #{row.actorType,jdbcType=INTEGER},
+      </if>
+      <if test="row.weight != null">
+        weight = #{row.weight,jdbcType=INTEGER},
+      </if>
+      <if test="row.agentId != null">
+        agent_id = #{row.agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.agentType != null">
+        agent_type = #{row.agentType,jdbcType=INTEGER},
+      </if>
+      <if test="row.extend != null">
+        extend = #{row.extend,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update flw_his_task_actor
+    set id = #{row.id,jdbcType=BIGINT},
+      tenant_id = #{row.tenantId,jdbcType=VARCHAR},
+      instance_id = #{row.instanceId,jdbcType=BIGINT},
+      task_id = #{row.taskId,jdbcType=BIGINT},
+      actor_id = #{row.actorId,jdbcType=VARCHAR},
+      actor_name = #{row.actorName,jdbcType=VARCHAR},
+      actor_type = #{row.actorType,jdbcType=INTEGER},
+      weight = #{row.weight,jdbcType=INTEGER},
+      agent_id = #{row.agentId,jdbcType=VARCHAR},
+      agent_type = #{row.agentType,jdbcType=INTEGER},
+      extend = #{row.extend,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwHisTaskActor">
+    update flw_his_task_actor
+    <set>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceId != null">
+        instance_id = #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="actorId != null">
+        actor_id = #{actorId,jdbcType=VARCHAR},
+      </if>
+      <if test="actorName != null">
+        actor_name = #{actorName,jdbcType=VARCHAR},
+      </if>
+      <if test="actorType != null">
+        actor_type = #{actorType,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentType != null">
+        agent_type = #{agentType,jdbcType=INTEGER},
+      </if>
+      <if test="extend != null">
+        extend = #{extend,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwHisTaskActor">
+    update flw_his_task_actor
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      instance_id = #{instanceId,jdbcType=BIGINT},
+      task_id = #{taskId,jdbcType=BIGINT},
+      actor_id = #{actorId,jdbcType=VARCHAR},
+      actor_name = #{actorName,jdbcType=VARCHAR},
+      actor_type = #{actorType,jdbcType=INTEGER},
+      weight = #{weight,jdbcType=INTEGER},
+      agent_id = #{agentId,jdbcType=VARCHAR},
+      agent_type = #{agentType,jdbcType=INTEGER},
+      extend = #{extend,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

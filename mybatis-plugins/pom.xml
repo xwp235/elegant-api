@@ -9,7 +9,6 @@
 
     <groupId>jp.onehr.elegantapi.plugins</groupId>
     <artifactId>mybatis-plugins</artifactId>
-    <version>${parent.version}</version>
     <packaging>jar</packaging>
 
     <name>mybatis-plugins</name>

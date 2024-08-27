@@ -2,6 +2,7 @@ package jp.onehr.elegantapi.page;
 
 import jp.onehr.elegantapi.common.limiter.annotation.RateLimit;
 import jp.onehr.elegantapi.modules.core.domain.entity.MastUser;
+import jp.onehr.elegantapi.modules.core.mapper.MastUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

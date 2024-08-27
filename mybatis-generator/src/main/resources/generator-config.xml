@@ -52,7 +52,12 @@
                              targetPackage="jp.onehr.elegantapi.modules.core.mapper"
                              type="XMLMAPPER"/>
 
+        <table tableName="flw_his_task_actor" domainObjectName="FlwHisTaskActor"/>
+<!--        <table tableName="flw_his_instance" domainObjectName="FlwHisInstance"/>-->
+<!--        <table tableName="flw_task" domainObjectName="FlwTask"/>-->
+<!--        <table tableName="flw_instance" domainObjectName="FlwInstance"/>-->
+<!--        <table tableName="flw_process" domainObjectName="FlwProcess"/>-->
 <!--        <table tableName="mast_user" domainObjectName="MastUser"/>-->
-            <table tableName="hist_client_login_log" domainObjectName="HistClientLoginLog"/>
+<!--            <table tableName="hist_client_login_log" domainObjectName="HistClientLoginLog"/>-->
     </context>
 </generatorConfiguration>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.onehr.elegantapi.bpm.mybatis.mapper.FlwExtInstanceMapper">
+  <resultMap id="BaseResultMap" type="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="process_id" jdbcType="BIGINT" property="processId" />
+    <result column="process_type" jdbcType="VARCHAR" property="processType" />
+    <result column="model_content" jdbcType="VARCHAR" property="modelContent" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, tenant_id, process_id, process_type, model_content
+  </sql>
+  <select id="selectByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from flw_ext_instance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from flw_ext_instance
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from flw_ext_instance
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample">
+    delete from flw_ext_instance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+    insert into flw_ext_instance (id, tenant_id, process_id,
+      process_type, model_content)
+    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=VARCHAR}, #{processId,jdbcType=BIGINT},
+      #{processType,jdbcType=VARCHAR}, #{modelContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+    insert into flw_ext_instance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="processId != null">
+        process_id,
+      </if>
+      <if test="processType != null">
+        process_type,
+      </if>
+      <if test="modelContent != null">
+        model_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="processId != null">
+        #{processId,jdbcType=BIGINT},
+      </if>
+      <if test="processType != null">
+        #{processType,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null">
+        #{modelContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample" resultType="java.lang.Long">
+    select count(*) from flw_ext_instance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update flw_ext_instance
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.tenantId != null">
+        tenant_id = #{row.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.processId != null">
+        process_id = #{row.processId,jdbcType=BIGINT},
+      </if>
+      <if test="row.processType != null">
+        process_type = #{row.processType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.modelContent != null">
+        model_content = #{row.modelContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update flw_ext_instance
+    set id = #{row.id,jdbcType=BIGINT},
+      tenant_id = #{row.tenantId,jdbcType=VARCHAR},
+      process_id = #{row.processId,jdbcType=BIGINT},
+      process_type = #{row.processType,jdbcType=VARCHAR},
+      model_content = #{row.modelContent,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+    update flw_ext_instance
+    <set>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="processId != null">
+        process_id = #{processId,jdbcType=BIGINT},
+      </if>
+      <if test="processType != null">
+        process_type = #{processType,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null">
+        model_content = #{modelContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+    update flw_ext_instance
+    set tenant_id = #{tenantId,jdbcType=VARCHAR},
+      process_id = #{processId,jdbcType=BIGINT},
+      process_type = #{processType,jdbcType=VARCHAR},
+      model_content = #{modelContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
