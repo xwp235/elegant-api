@@ -29,7 +29,7 @@ public class SseHelper {
     /**
      * 容器，保存连接，用于输出返回 ;可使用其他方法实现
      */
-    private static final Map<String, SseEmitter> CLIENT_LIST = new ConcurrentHashMap<>();
+    private static final Map<String, SseEmitter> SSE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 创建连接
@@ -42,20 +42,7 @@ public class SseHelper {
             clientId = authUserUtil.getClientId();
         }
         // 设置超时时间，0表示不过期。默认30秒，超过时间未完成会抛出异常：AsyncRequestTimeoutException
-        var sseEmitter = createEmitter(clientId);
-        // 推送消息异常时，回调方法
-        sseEmitter.onError(throwable -> {
-            throw new SystemException(ErrorConstants.ERR_1000, true,throwable);
-        });
-        CLIENT_LIST.put(clientId, sseEmitter);
-        try {
-            // 注册成功返回clientId给用户
-            sseEmitter.send(SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_CREATED)).data(clientId, MediaType.APPLICATION_JSON));
-        } catch (IOException e) {
-            LogUtil.error("创建长链接异常!",e);
-        }
-        LogUtil.debug("创建新的sse连接，当前token：{} 累计token:{}", clientId, CLIENT_LIST.size());
-        return sseEmitter;
+        return createEmitter(clientId);
     }
 
     /**
@@ -69,7 +56,7 @@ public class SseHelper {
         } else {
             clientId = authUserUtil.getClientId();
         }
-        var sseEmitter = CLIENT_LIST.get(clientId);
+        var sseEmitter = SSE_CACHE.get(clientId);
         if (sseEmitter != null) {
             sseEmitter.complete();
             removeUser(clientId);
@@ -82,11 +69,11 @@ public class SseHelper {
      * @param message 消息内容
      */
     public void send2AllClients(BroadcastMessage message) {
-        if (MapUtil.isEmpty(CLIENT_LIST)) {
+        if (MapUtil.isEmpty(SSE_CACHE)) {
             return;
         }
         // 判断发送的消息是否为空
-        for (Map.Entry<String, SseEmitter> entry : CLIENT_LIST.entrySet()) {
+        for (Map.Entry<String, SseEmitter> entry : SSE_CACHE.entrySet()) {
             send2ClientByClientId(entry.getKey(), message.getMessage(), entry.getValue());
         }
     }
@@ -98,30 +85,34 @@ public class SseHelper {
      */
     public void send2Client(SseMessage message) {
         var clientId = message.getClientId();
-        var emitter = CLIENT_LIST.get(clientId);
-        if (Objects.isNull(emitter)) {
-            send2ClientByClientId(clientId, message.getMessage(), CLIENT_LIST.get(clientId));
+        var emitter = SSE_CACHE.get(clientId);
+        if (Objects.nonNull(emitter)) {
+            send2ClientByClientId(clientId, message.getMessage(),emitter);
         }
     }
 
     private SseEmitter createEmitter(String clientId) {
-        var sseEmitter = new SseEmitter(0L);
-        // 注册回调
-        // 长链接完成后回调接口(即关闭连接时调用)
+        var sseEmitter = SSE_CACHE.get(clientId);
+        if (Objects.nonNull(sseEmitter)){
+            return sseEmitter;
+        }
+        // 设置连接超时时间，需要配合配置项 spring.mvc.async.request-timeout: 600000 一起使用
+        sseEmitter = new SseEmitter(600_000L);
+        // 注册超时回调，超时后触发
+        sseEmitter.onTimeout(() -> {
+            LogUtil.debug("连接超时：{}", clientId);
+            removeUser(clientId);
+        });
+        // 注册完成回调，调用sseEmitter.complete() 触发
         sseEmitter.onCompletion(() -> {
             LogUtil.debug("结束连接：{}", clientId);
             removeUser(clientId);
         });
-        // 连接超时回调
-        sseEmitter.onTimeout(() -> {
-            LogUtil.debug("连接超时：{}", clientId);
-            removeUser(clientId);
-            var emitter = CLIENT_LIST.get(clientId);
-            if (Objects.nonNull(emitter)) {
-                sseEmitter.complete();
-                removeUser(clientId);
-            }
+        // 注册异常回调，调用sseEmitter.completeWithError()触发
+        sseEmitter.onError(throwable -> {
+            LogUtil.error("连接已异常，正准备关闭客户端["+clientId+"]", throwable);              SSE_CACHE.remove(clientId);
         });
+        SSE_CACHE.put(clientId, sseEmitter);
         return sseEmitter;
     }
 
@@ -130,8 +121,8 @@ public class SseHelper {
      *
      * @param clientId 客户端ID
      **/
-    private static void removeUser(String clientId) {
-        CLIENT_LIST.remove(clientId);
+    private void removeUser(String clientId) {
+        SSE_CACHE.remove(clientId);
         LogUtil.debug("NotificationHelper[removeUser]:移除客户端：{}", clientId);
     }
 
@@ -142,7 +133,7 @@ public class SseHelper {
      * @param clientId  客户端ID
      * @param message 推送信息，此处结合具体业务，定义自己的返回值即可
      **/
-    private static void send2ClientByClientId(String clientId, String message, SseEmitter sseEmitter) {
+    private void send2ClientByClientId(String clientId, String message, SseEmitter sseEmitter) {
         if (Objects.isNull(sseEmitter)) {
             LogUtil.warn("推送消息失败：客户端{}未创建长链接,失败消息:{}",
                     clientId, message);
@@ -154,24 +145,9 @@ public class SseHelper {
             sseEmitter.send(sendData);
         } catch (IOException e) {
             // 推送消息失败，记录错误日志，进行重推
-            LogUtil.warn("推送{}消息失败：{},尝试进行重推", clientId,message);
-            // 推送消息失败后，每隔10s推送一次，推送5次
-            for (int i = 0; i < 5; i++) {
-                try {
-                    Thread.sleep(10000);
-                    sseEmitter = CLIENT_LIST.get(clientId);
-                    if (sseEmitter == null) {
-                        LogUtil.warn("{}的第{}次消息重推失败，未创建长链接", clientId, i + 1);
-                        continue;
-                    }
-                    sseEmitter.send(sendData);
-                } catch (Exception ex) {
-                    throw new SystemException(ErrorConstants.ERR_1000, true,e);
-                }
-                LogUtil.info("{}的第{}次消息重推成功,{}", clientId, i + 1, message);
-                return;
-            }
+            throw new SystemException(ErrorConstants.ERR_1000, true,e);
         }
+        sseEmitter.complete();
     }
 
 }
