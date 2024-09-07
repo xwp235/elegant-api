@@ -278,8 +278,9 @@ public class TaskServiceImpl implements TaskService {
             hisTask.setTaskType(TaskType.agentAssist);
         }
 
-        // 会签情况处理其它任务 排除完成情况
-        if (PerformType.countersign.eq(flwTask.getPerformType()) && TaskState.complete.ne(taskState.getValue())) {
+        // 会签情况处理其它任务 排除完成及自动跳过情况，自动跳过是当前任务归档非所有任务归档
+        if (PerformType.countersign.eq(flwTask.getPerformType()) && TaskState.complete.ne(taskState.getValue())
+                && TaskState.autoJump.ne(taskState.getValue())) {
             List<FlwTask> flwTaskList = taskDao.selectListByParentTaskId(flwTask.getParentTaskId());
             flwTaskList.forEach(t -> {
                 FlwHisTask ht = FlwHisTask.of(t);
@@ -404,11 +405,26 @@ public class TaskServiceImpl implements TaskService {
         return false;
     }
 
+    @Override
+    public FlwTask claimRole(Long taskId, FlowCreator flowCreator) {
+        return claim(taskId, AgentType.claimRole, EventType.claimRole, flowCreator);
+    }
+
+    @Override
+    public FlwTask claimDepartment(Long taskId, FlowCreator flowCreator) {
+        return claim(taskId, AgentType.claimDepartment, EventType.claimDepartment, flowCreator);
+    }
+
     /**
      * 根据 任务ID 认领任务，删除其它任务参与者
+     *
+     * @param taskId      任务ID
+     * @param agentType   代理人类型
+     * @param eventType   流程引擎监听类型
+     * @param flowCreator 任务认领者
+     * @return Task 任务对象
      */
-    @Override
-    public FlwTask claim(Long taskId, FlowCreator flowCreator) {
+    protected FlwTask claim(Long taskId, AgentType agentType, EventType eventType, FlowCreator flowCreator) {
         FlwTask flwTask = taskDao.selectCheckById(taskId);
         FlwTaskActor taskActor = this.isAllowed(flwTask, flowCreator.getCreateId());
         if (null == taskActor) {
@@ -419,10 +435,10 @@ public class TaskServiceImpl implements TaskService {
         taskActorDao.deleteById(taskActor.getId());
 
         // 插入当前用户ID作为唯一参与者
-        taskActorDao.insert(FlwTaskActor.ofAgent(AgentType.claimRole, flowCreator, flwTask, taskActor));
+        taskActorDao.insert(FlwTaskActor.ofAgent(agentType, flowCreator, flwTask, taskActor));
 
         // 任务监听器通知
-        this.taskNotify(EventType.claim, () -> flwTask, null, flowCreator);
+        this.taskNotify(eventType, () -> flwTask, null, flowCreator);
         return flwTask;
     }
 
@@ -928,12 +944,19 @@ public class TaskServiceImpl implements TaskService {
             flwHisTask.calculateDuration();
             hisTaskDao.insert(flwHisTask);
 
-            // 任务监听器通知
-            this.taskNotify(EventType.cc, () -> flwHisTask, nodeModel, flowCreator);
-
+            // 抄送人员
             for (NodeAssignee nodeUser : nodeUserList) {
                 hisTaskActorDao.insert(FlwHisTaskActor.ofNodeAssignee(nodeUser, flwHisTask.getInstanceId(), flwHisTask.getId()));
             }
+
+            // 历史任务参与者数据入库
+            for (NodeAssignee nodeUser : nodeUserList) {
+                hisTaskActorDao.insert(FlwHisTaskActor.ofNodeAssignee(nodeUser, flwHisTask.getInstanceId(), flwHisTask.getId()));
+            }
+
+            // 任务监听器通知
+            this.taskNotify(EventType.cc, () -> flwHisTask, nodeModel, flowCreator);
+
         }
     }
 
@@ -1062,10 +1085,12 @@ public class TaskServiceImpl implements TaskService {
 
             // 分配参与者
             this.assignTask(newFlwTask.getInstanceId(), newFlwTask.getId(), actorType, t);
-
-            // 创建任务监听
-            this.taskNotify(EventType.create, () -> newFlwTask, nodeModel, flowCreator);
         });
+
+        // 所有任务创建后，创建任务监听，避免后续任务因为监听逻辑导致未创建情况
+        flwTasks.forEach(t -> this.taskNotify(EventType.create, () -> t, nodeModel, flowCreator));
+
+        // 返回创建的任务列表
         return flwTasks;
     }
 

@@ -10,6 +10,7 @@ import jp.onehr.elegantapi.bpm.engine.assist.Assert;
 import jp.onehr.elegantapi.bpm.engine.entity.FlwInstance;
 import jp.onehr.elegantapi.bpm.engine.entity.FlwTask;
 import jp.onehr.elegantapi.bpm.engine.entity.FlwTaskActor;
+import jp.onehr.elegantapi.bpm.engine.model.ModelHelper;
 import jp.onehr.elegantapi.bpm.engine.model.NodeModel;
 import jp.onehr.elegantapi.bpm.engine.model.ProcessModel;
 import lombok.Getter;
@@ -143,6 +144,19 @@ public class Execution implements Serializable {
     public boolean executeNodeModel(FlowLongContext flowLongContext, String nodeKey) {
         ProcessModel processModel = this.getProcessModel();
         Assert.isNull(processModel, "Process model content cannot be empty");
+
+        // 重新加载流程模型内容
+        ModelHelper.reloadProcessModel(processModel, t -> {
+
+            // 更新流程模型
+            boolean ok = flowLongContext.getRuntimeService().updateInstanceModelById(flwInstance.getId(), t);
+            Assert.isFalse(ok, "Failed to update process model content");
+
+            // 重新构建父节点
+            t.buildParentNode(processModel.getNodeConfig());
+        });
+
+        // 获取节点模型
         NodeModel nodeModel = processModel.getNode(nodeKey);
         Assert.isNull(nodeModel, "Not found in the process model, process nodeKey=" + nodeKey);
 

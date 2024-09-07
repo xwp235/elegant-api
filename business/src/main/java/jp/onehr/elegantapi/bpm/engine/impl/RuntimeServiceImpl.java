@@ -18,10 +18,7 @@ import jp.onehr.elegantapi.bpm.engine.dao.FlwHisInstanceDao;
 import jp.onehr.elegantapi.bpm.engine.dao.FlwInstanceDao;
 import jp.onehr.elegantapi.bpm.engine.entity.*;
 import jp.onehr.elegantapi.bpm.engine.listener.InstanceListener;
-import jp.onehr.elegantapi.bpm.engine.model.ConditionNode;
-import jp.onehr.elegantapi.bpm.engine.model.DynamicAssignee;
-import jp.onehr.elegantapi.bpm.engine.model.NodeModel;
-import jp.onehr.elegantapi.bpm.engine.model.ProcessModel;
+import jp.onehr.elegantapi.bpm.engine.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -78,26 +75,8 @@ public class RuntimeServiceImpl implements RuntimeService {
         flwInstance.setProcessId(flwProcess.getId());
         flwInstance.setMapVariable(args);
 
-        /*
-         * 处理追加模型逻辑
-         */
-        Map<String, Object> modelData = FlowDataTransfer.get(FlowConstants.processDynamicAssignee);
-        if (ObjectUtils.isNotEmpty(modelData)) {
-            ProcessModel processModel = flwProcess.model();
-            modelData.forEach((key, value) -> {
-                if (value instanceof DynamicAssignee) {
-                    NodeModel thisNodeModel = processModel.getNode(key);
-                    if (null != thisNodeModel) {
-                        DynamicAssignee dynamicAssignee = (DynamicAssignee) value;
-                        thisNodeModel.setNodeAssigneeList(dynamicAssignee.getAssigneeList());
-                    }
-                }
-            });
-            // 清理父节点
-            processModel.cleanParentNode(processModel.getNodeConfig());
-            // 更新模型
-            flwProcess.setModelContent2Json(processModel);
-        }
+        // 重新加载流程模型
+        ModelHelper.reloadProcessModel(flwProcess.model(), flwProcess::setModelContent2Json);
 
         // 保存实例
         this.saveInstance(flwInstance, flwProcess, flowCreator);
@@ -290,6 +269,18 @@ public class RuntimeServiceImpl implements RuntimeService {
         Assert.illegal(null == flwInstance || null == flwInstance.getId(),
                 "instance id cannot be empty");
         instanceDao.updateById(flwInstance);
+    }
+
+    @Override
+    public boolean updateInstanceModelById(Long id, ProcessModel processModel) {
+        // 使缓存失效
+        FlowLongContext.invalidateProcessModel(FlowConstants.processInstanceCacheKey + id);
+
+        // 更新流程实例模型
+        FlwExtInstance extInstance = new FlwExtInstance();
+        extInstance.setId(id);
+        extInstance.setModelContent(FlowLongContext.toJson(processModel));
+        return extInstanceDao.updateById(extInstance);
     }
 
     /**
