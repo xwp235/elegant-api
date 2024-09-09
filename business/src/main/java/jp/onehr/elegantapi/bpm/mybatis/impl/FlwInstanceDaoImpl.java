@@ -51,6 +51,13 @@ public class FlwInstanceDaoImpl implements FlwInstanceDao {
     }
 
     @Override
+    public Long selectCountByParentInstanceId(Long parentInstanceId) {
+        var flwInstanceExample = new FlwInstanceExample();
+        flwInstanceExample.createCriteria().andParentInstanceIdEqualTo(parentInstanceId);
+        return instanceMapper.countByExample(flwInstanceExample);
+    }
+
+    @Override
     public FlwInstance selectById(Long id) {
         return instanceMapper.selectByPrimaryKey(id);
     }

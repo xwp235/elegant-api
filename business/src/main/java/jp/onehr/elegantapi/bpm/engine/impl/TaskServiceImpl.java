@@ -876,6 +876,7 @@ public class TaskServiceImpl implements TaskService {
             // 启动子流程，任务归档历史
             execution.getEngine().startProcessInstance(flwProcess, flowCreator, null, () -> {
                 FlwInstance flwInstance = new FlwInstance();
+                flwInstance.setBusinessKey(nodeModel.getNodeKey());
                 flwInstance.setParentInstanceId(flwTask.getInstanceId());
                 return flwInstance;
             }).ifPresent(instance -> {
@@ -939,6 +940,7 @@ public class TaskServiceImpl implements TaskService {
         if (ObjectUtils.isNotEmpty(nodeUserList)) {
             // 抄送任务
             FlwHisTask flwHisTask = FlwHisTask.of(flwTask, TaskState.complete);
+            flwHisTask.setId(null);
             flwHisTask.setTaskType(TaskType.cc);
             flwHisTask.setPerformType(PerformType.copy);
             flwHisTask.calculateDuration();
@@ -1021,8 +1023,9 @@ public class TaskServiceImpl implements TaskService {
         }
 
         if (performType == PerformType.start) {
-            // 发起任务
+            // 发起任务，创建历史任务
             FlwHisTask flwHisTask = FlwHisTask.of(flwTask, TaskState.complete);
+            flwHisTask.setId(null);
             flwHisTask.calculateDuration();
             if (hisTaskDao.insert(flwHisTask)) {
                 // 设置为执行任务
