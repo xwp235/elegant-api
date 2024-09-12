@@ -139,6 +139,52 @@
   // window.addEventListener('load', function() {
   //   connect();
   // });
+
+
+  //创建一个新的 EventSource，但首先使用 fetch API 发送带有 Authorization 头的请求
+  function connectSSEWithHeaders(url, headers = {}) {
+    return fetch(url, {
+      method: 'GET',
+      headers: headers,
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      mode: 'cors', // no-cors, cors, *same-origin
+      credentials: 'same-origin', // include, *same-origin, omit
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *client
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+
+              // 读取响应体作为文本，然后解析URL来创建 EventSource
+              return response.text().then(text => {
+                // 这里通常不需要解析text，因为我们只是要确认连接成功。
+                // 但如果SSE URL在响应体中，你可能需要处理它。
+                // 假设服务器直接支持SSE在原始URL
+                return new EventSource(url);
+              });
+            })
+            .catch(error => {
+              console.error('There was a problem with your fetch operation:', error);
+            });
+  }
+
+  // 使用示例
+  const headers = {
+    'accessToken': 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIwIiwiaXNzIjo'
+  };
+
+  connectSSEWithHeaders('http://localhost:8088/sys/sse/connect', headers)
+          .then(eventSource => {
+            eventSource.onmessage = function(e) {
+              console.log('后端返回的数据:', e.data);
+            };
+
+            eventSource.onerror = function(err) {
+              console.error('EventSource failed:', err);
+            };
+          });
 </script>
 </body>
 </html>

@@ -11,5 +11,6 @@ public class SseMessage {
     private String clientId;
     @NotBlank
     private String message;
+    private String eventName;
 
 }

@@ -3,6 +3,7 @@ package jp.onehr.elegantapi.sse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -13,7 +14,7 @@ public class NotificationController {
 
     private final SseHelper sseHelper;
 
-    @GetMapping("{type}/open")
+    @GetMapping(value="{type}/open",produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter open(@PathVariable String type) {
         return sseHelper.open(type);
     }

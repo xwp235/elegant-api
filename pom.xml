@@ -19,7 +19,7 @@
         <dotenv-java.version>3.0.1</dotenv-java.version>
         <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
         <hutool.version>5.8.31</hutool.version>
-        <sa-token.version>1.38.0</sa-token.version>
+        <sa-token.version>1.39.0</sa-token.version>
         <juniversalchardet.version>2.5.0</juniversalchardet.version>
         <bucket4j.version>8.14.0</bucket4j.version>
 

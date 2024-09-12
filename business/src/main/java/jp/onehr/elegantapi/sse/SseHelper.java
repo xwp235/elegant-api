@@ -74,7 +74,7 @@ public class SseHelper {
         }
         // 判断发送的消息是否为空
         for (Map.Entry<String, SseEmitter> entry : SSE_CACHE.entrySet()) {
-            send2ClientByClientId(entry.getKey(), message.getMessage(), entry.getValue());
+            send2ClientByClientId(entry.getKey(), message.getEventName(),message.getMessage(), entry.getValue());
         }
     }
 
@@ -87,7 +87,7 @@ public class SseHelper {
         var clientId = message.getClientId();
         var emitter = SSE_CACHE.get(clientId);
         if (Objects.nonNull(emitter)) {
-            send2ClientByClientId(clientId, message.getMessage(),emitter);
+            send2ClientByClientId(clientId, message.getEventName(),message.getMessage(),emitter);
         }
     }
 
@@ -96,8 +96,8 @@ public class SseHelper {
         if (Objects.nonNull(sseEmitter)){
             return sseEmitter;
         }
-        // 设置连接超时时间，需要配合配置项 spring.mvc.async.request-timeout: 600000 一起使用
-        sseEmitter = new SseEmitter(600_000L);
+        // 创建一个新的SseEmitter实例，默认30秒超时，设置为0L则永不超时
+        sseEmitter = new SseEmitter(0L);
         // 注册超时回调，超时后触发
         sseEmitter.onTimeout(() -> {
             LogUtil.debug("连接超时：{}", clientId);
@@ -113,6 +113,14 @@ public class SseHelper {
             LogUtil.error("连接已异常，正准备关闭客户端["+clientId+"]", throwable);              SSE_CACHE.remove(clientId);
         });
         SSE_CACHE.put(clientId, sseEmitter);
+
+        try {
+            // 向客户端发送一条连接成功的事件
+            sseEmitter.send(SseEmitter.event().comment("connected"));
+        } catch (IOException e) {
+            // 如果发送消息失败，则从映射表中移除emitter
+            removeUser(clientId);
+        }
         return sseEmitter;
     }
 
@@ -131,20 +139,23 @@ public class SseHelper {
      * 此处做了推送失败后，重试推送机制，可根据自己业务进行修改
      *
      * @param clientId  客户端ID
+     * @param eventName 推送事件名称
      * @param message 推送信息，此处结合具体业务，定义自己的返回值即可
      **/
-    private void send2ClientByClientId(String clientId, String message, SseEmitter sseEmitter) {
+    private void send2ClientByClientId(String clientId, String eventName,String message, SseEmitter sseEmitter) {
         if (Objects.isNull(sseEmitter)) {
             LogUtil.warn("推送消息失败：客户端{}未创建长链接,失败消息:{}",
                     clientId, message);
             return;
         }
-        var sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK))
+        var sendData = SseEmitter.event().name(eventName).id(String.valueOf(HttpStatus.HTTP_OK))
                 .data(message, MediaType.APPLICATION_JSON);
         try {
             sseEmitter.send(sendData);
         } catch (IOException e) {
             // 推送消息失败，记录错误日志，进行重推
+            removeUser(clientId);
+            sseEmitter.completeWithError(e);
             throw new SystemException(ErrorConstants.ERR_1000, true,e);
         }
         sseEmitter.complete();

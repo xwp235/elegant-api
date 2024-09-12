@@ -9,5 +9,6 @@ public class BroadcastMessage {
     private String group;
     @NotBlank
     private String message;
+    private String eventName;
 
 }
