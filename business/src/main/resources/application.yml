@@ -117,3 +117,19 @@ mybatis:
     local-cache-scope: session
     use-column-label: on
   type-handlers-package: jp.onehr.elegantapi.common.handler.typehandler.postgresql
+decorator:
+  datasource:
+    enabled: on
+    datasource-proxy:
+      multiline: on
+      slow-query:
+        threshold: 2
+        log-level:
+        logger-name: SLOW-QUERY-LOGGER
+        enable-logging: on
+      json-format: off
+      format-sql: off
+    p6spy:
+      log-format: '%(executionTime)ms|%(category)|connection%(connectionId)|%(sqlSingleLine)'
+      logging: file
+      log-file: p6spy-slow-query.log

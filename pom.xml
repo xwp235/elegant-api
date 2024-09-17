@@ -22,6 +22,7 @@
         <sa-token.version>1.39.0</sa-token.version>
         <juniversalchardet.version>2.5.0</juniversalchardet.version>
         <bucket4j.version>8.14.0</bucket4j.version>
+        <p6spy-spring-boot-starter.version>1.9.2</p6spy-spring-boot-starter.version>
 
         <java.version>21</java.version>
         <skipTests>true</skipTests>
@@ -71,6 +72,21 @@
                 <version>${bucket4j.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.gavlyukovskiy</groupId>
+                <artifactId>p6spy-spring-boot-starter</artifactId>
+                <version>${p6spy-spring-boot-starter.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
