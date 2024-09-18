@@ -45,12 +45,14 @@ CREATE TABLE "public"."flw_ext_instance" (
                                              "id" int8 PRIMARY KEY ,
                                              "tenant_id" varchar(50),
                                              "process_id" int8 NOT NULL,
+                                             "process_name" varchar(100),
                                              "process_type" varchar(100),
                                              "model_content" text
 );
 COMMENT ON COLUMN "public"."flw_ext_instance"."id" IS '主キー';
 COMMENT ON COLUMN "public"."flw_ext_instance"."tenant_id" IS 'テナントID';
 COMMENT ON COLUMN "public"."flw_ext_instance"."process_id" IS 'プロセスID';
+COMMENT ON COLUMN "public"."flw_ext_instance"."process_name" IS '流程名称';
 COMMENT ON COLUMN "public"."flw_ext_instance"."process_type" IS 'プロセスタイプ';
 COMMENT ON COLUMN "public"."flw_ext_instance"."model_content" IS 'プロセスモデル定義のJSONコンテンツ';
 COMMENT ON TABLE "public"."flw_ext_instance" IS '拡張プロセスインスタンステーブル';

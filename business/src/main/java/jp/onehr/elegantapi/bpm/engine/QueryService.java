@@ -38,6 +38,14 @@ public interface QueryService {
     FlwHisInstance getHistInstance(Long instanceId);
 
     /**
+     * 根据流程实例ID获取扩展流程实例对象
+     *
+     * @param instanceId 扩展流程实例ID
+     * @return FlwExtInstance 扩展流程实例对象
+     */
+    FlwExtInstance getExtInstance(Long instanceId);
+
+    /**
      * 判断流程实例下是否存在活跃子流程实例
      *
      * @param instanceId 流程实例ID
@@ -169,4 +177,13 @@ public interface QueryService {
      * @return 历史任务列表
      */
     Optional<List<FlwHisTask>> getHisTasksByInstanceId(Long instanceId);
+
+    /**
+     * 根据实例ID获取所有子流程
+     *
+     * @param instanceId 实例ID
+     * @return 所有子流程
+     */
+    Optional<List<FlwInstance>> getSubProcessByInstanceId(Long instanceId);
+
 }

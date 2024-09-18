@@ -18,6 +18,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 流程执行过程中所传递的执行对象，其中包含流程定义、流程模型、流程实例对象、执行参数、返回的任务列表
@@ -167,7 +168,27 @@ public class Execution implements Serializable {
                 nodeKeys.add(ft.getTaskKey());
             }
         });
-        Optional<NodeModel> executeNodeOptional = nodeModel.nextNode(nodeKeys);
+
+        // 查找流程关联的子流程
+        List<String> otherProcessKeys = new LinkedList<>();
+        Optional<List<FlwInstance>> subProcessList = flowLongContext.getQueryService().getSubProcessByInstanceId(flwTask.getInstanceId());
+        subProcessList.ifPresent(subProcesses -> subProcesses.forEach(process -> {
+            ProcessModel otherModel = flowLongContext.getRuntimeService().getProcessModelByInstanceId(process.getId());
+            otherProcessKeys.addAll(new ArrayList<>(ModelHelper.getRootNodeAllChildNodes(otherModel.getNodeConfig()).stream().map(NodeModel::getNodeKey).collect(Collectors.toList())));
+            flowLongContext.getQueryService().getActiveTasksByInstanceId(process.getId()).ifPresent(flwTasks -> {
+                for (FlwTask ft : flwTasks) {
+                    nodeKeys.add(ft.getTaskKey());
+                }
+            });
+        }));
+
+        Optional<NodeModel> executeNodeOptional = Optional.empty();
+
+        // 如果有额外的流程，先判断当前的task是否在流程里面，如果不在直找下一个节点
+        if (!(!otherProcessKeys.isEmpty() && !nodeKeys.isEmpty() && !Collections.disjoint(nodeKeys, otherProcessKeys))) {
+            executeNodeOptional = nodeModel.nextNode(nodeKeys);
+        }
+
         if (executeNodeOptional.isPresent()) {
             // 执行流程节点
             NodeModel executeNode = executeNodeOptional.get();
