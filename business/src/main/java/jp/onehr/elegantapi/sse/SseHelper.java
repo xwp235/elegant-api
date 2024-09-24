@@ -148,8 +148,15 @@ public class SseHelper {
                     clientId, message);
             return;
         }
-        var sendData = SseEmitter.event().name(eventName).id(String.valueOf(HttpStatus.HTTP_OK))
-                .data(message, MediaType.APPLICATION_JSON);
+
+        SseEmitter.SseEventBuilder sendData;
+        if (StrUtil.isNotBlank(eventName)) {
+            sendData = SseEmitter.event().name(eventName).id(String.valueOf(HttpStatus.HTTP_OK))
+                    .data(message, MediaType.APPLICATION_JSON);
+        } else {
+            sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK))
+                    .data(message, MediaType.APPLICATION_JSON);
+        }
         try {
             sseEmitter.send(sendData);
         } catch (IOException e) {
@@ -158,7 +165,6 @@ public class SseHelper {
             sseEmitter.completeWithError(e);
             throw new SystemException(ErrorConstants.ERR_1000, true,e);
         }
-        sseEmitter.complete();
     }
 
 }
