@@ -3,6 +3,8 @@ package jp.onehr.elegantapi.common.config;
 import cn.dev33.satoken.exception.SaTokenException;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jp.onehr.elegantapi.common.auth.AuthMemberUtil;
 import jp.onehr.elegantapi.common.auth.AuthUserUtil;
 import jp.onehr.elegantapi.common.interceptor.LogInterceptor;
@@ -10,9 +12,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -71,4 +82,16 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        resolvers.removeLast();
+        resolvers.add(new DefaultHandlerExceptionResolver(){
+            @Override
+            protected ModelAndView handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request, HttpServletResponse response, Object handler) {
+                return new ModelAndView((model, request1, response1) -> {
+                   response1.getWriter().println(ex.getBody());
+                });
+            }
+        });
+    }
 }

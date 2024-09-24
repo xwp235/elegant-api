@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -123,6 +124,14 @@ public class ControllerExceptionHandler {
         return JsonResp.error(MessageUtil.getMessage("resourceNotFound")).setCode(HttpStatus.NOT_FOUND.value());
     }
 
+    @ExceptionHandler({NoHandlerFoundException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @IgnoreRespSerializable
+    public JsonResp noHandlerFoundException(NoHandlerFoundException e) {
+        return JsonResp.error(e.getMessage()).setCode(HttpStatus.NOT_FOUND.value());
+    }
+
     /**
      * 业务异常统一处理
      */
@@ -166,15 +175,6 @@ public class ControllerExceptionHandler {
             }
         }
         return resp;
-    }
-
-    /**
-     * SseEmitter连接超时异常
-     */
-    @ExceptionHandler(AsyncRequestTimeoutException.class)
-    @ResponseBody
-    public SseEmitter sseTimeoutException() {
-        return null;
     }
 
     /**
