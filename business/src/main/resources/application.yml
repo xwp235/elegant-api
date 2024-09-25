@@ -5,6 +5,9 @@ server:
       timeout: 30m
   port: ${SERVER_PORT:8080}
 spring:
+  autoconfigure:
+    exclude:
+      - com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration
   thymeleaf:
     cache: ${THYMELEAF_ENABLE_CACHE:off}
     mode: ${THYMELEAF_MODE:HTML}

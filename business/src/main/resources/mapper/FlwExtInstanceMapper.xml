@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="jp.onehr.elegantapi.bpm.mybatis.mapper.FlwExtInstanceMapper">
-  <resultMap id="BaseResultMap" type="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+<mapper namespace="jp.onehr.elegantapi.flowlong.mapper.FlwExtInstanceMapper">
+  <resultMap id="BaseResultMap" type="com.aizuda.bpm.engine.entity.FlwExtInstance">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="process_id" jdbcType="BIGINT" property="processId" />
+    <result column="process_name" jdbcType="VARCHAR" property="processName"/>
     <result column="process_type" jdbcType="VARCHAR" property="processType" />
     <result column="model_content" jdbcType="VARCHAR" property="modelContent" />
   </resultMap>
@@ -67,9 +68,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tenant_id, process_id, process_type, model_content
+    id, tenant_id, process_id, process_name, process_type, model_content
   </sql>
-  <select id="selectByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwExtInstanceExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,19 +94,19 @@
     delete from flw_ext_instance
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample">
+  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwExtInstanceExample">
     delete from flw_ext_instance
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
-    insert into flw_ext_instance (id, tenant_id, process_id,
+  <insert id="insert" parameterType="com.aizuda.bpm.engine.entity.FlwExtInstance">
+    insert into flw_ext_instance (id, tenant_id, process_id, process_name,
       process_type, model_content)
-    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=VARCHAR}, #{processId,jdbcType=BIGINT},
+    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=VARCHAR}, #{processId,jdbcType=BIGINT},#{processName,jdbcType=VARCHAR},
       #{processType,jdbcType=VARCHAR}, #{modelContent,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+  <insert id="insertSelective" parameterType="com.aizuda.bpm.engine.entity.FlwExtInstance">
     insert into flw_ext_instance
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -116,6 +117,9 @@
       </if>
       <if test="processId != null">
         process_id,
+      </if>
+      <if test="processName != null">
+        process_name,
       </if>
       <if test="processType != null">
         process_type,
@@ -134,6 +138,9 @@
       <if test="processId != null">
         #{processId,jdbcType=BIGINT},
       </if>
+      <if test="processName != null">
+        #{processName,jdbcType=VARCHAR},
+      </if>
       <if test="processType != null">
         #{processType,jdbcType=VARCHAR},
       </if>
@@ -142,7 +149,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwExtInstanceExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwExtInstanceExample" resultType="java.lang.Long">
     select count(*) from flw_ext_instance
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -160,6 +167,9 @@
       <if test="row.processId != null">
         process_id = #{row.processId,jdbcType=BIGINT},
       </if>
+      <if test="row.processName != null">
+        process_name = #{row.processName,jdbcType=VARCHAR},
+      </if>
       <if test="row.processType != null">
         process_type = #{row.processType,jdbcType=VARCHAR},
       </if>
@@ -176,13 +186,14 @@
     set id = #{row.id,jdbcType=BIGINT},
       tenant_id = #{row.tenantId,jdbcType=VARCHAR},
       process_id = #{row.processId,jdbcType=BIGINT},
+      process_name = #{row.processName,jdbcType=VARCHAR},
       process_type = #{row.processType,jdbcType=VARCHAR},
       model_content = #{row.modelContent,jdbcType=VARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+  <update id="updateByPrimaryKeySelective" parameterType="com.aizuda.bpm.engine.entity.FlwExtInstance">
     update flw_ext_instance
     <set>
       <if test="tenantId != null">
@@ -190,6 +201,9 @@
       </if>
       <if test="processId != null">
         process_id = #{processId,jdbcType=BIGINT},
+      </if>
+      <if test="processName != null">
+        process_name = #{processName,jdbcType=VARCHAR},
       </if>
       <if test="processType != null">
         process_type = #{processType,jdbcType=VARCHAR},
@@ -200,10 +214,11 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwExtInstance">
+  <update id="updateByPrimaryKey" parameterType="com.aizuda.bpm.engine.entity.FlwExtInstance">
     update flw_ext_instance
     set tenant_id = #{tenantId,jdbcType=VARCHAR},
       process_id = #{processId,jdbcType=BIGINT},
+      process_name = #{processName,jdbcType=VARCHAR},
       process_type = #{processType,jdbcType=VARCHAR},
       model_content = #{modelContent,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

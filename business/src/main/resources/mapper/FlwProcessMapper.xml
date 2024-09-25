@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="jp.onehr.elegantapi.bpm.mybatis.mapper.FlwProcessMapper">
-  <resultMap id="BaseResultMap" type="jp.onehr.elegantapi.bpm.engine.entity.FlwProcess">
+<mapper namespace="jp.onehr.elegantapi.flowlong.mapper.FlwProcessMapper">
+  <resultMap id="BaseResultMap" type="com.aizuda.bpm.engine.entity.FlwProcess">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="create_id" jdbcType="VARCHAR" property="createId" />
@@ -82,7 +82,7 @@
     process_type, process_version, instance_url, remark, use_scope, process_state, model_content,
     sort
   </sql>
-  <select id="selectByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwProcessExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwProcessExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -106,13 +106,13 @@
     delete from flw_process
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwProcessExample">
+  <delete id="deleteByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwProcessExample">
     delete from flw_process
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwProcess">
+  <insert id="insert" parameterType="com.aizuda.bpm.engine.entity.FlwProcess">
     insert into flw_process (id, tenant_id, create_id,
       create_by, create_time, process_key,
       process_name, process_icon, process_type,
@@ -126,7 +126,7 @@
       #{useScope,jdbcType=SMALLINT}, #{processState,jdbcType=SMALLINT}, #{modelContent,jdbcType=VARCHAR},
       #{sort,jdbcType=SMALLINT})
   </insert>
-  <insert id="insertSelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwProcess">
+  <insert id="insertSelective" parameterType="com.aizuda.bpm.engine.entity.FlwProcess">
     insert into flw_process
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -229,7 +229,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jp.onehr.elegantapi.bpm.mybatis.example.FlwProcessExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="jp.onehr.elegantapi.flowlong.example.FlwProcessExample" resultType="java.lang.Long">
     select count(*) from flw_process
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -313,7 +313,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwProcess">
+  <update id="updateByPrimaryKeySelective" parameterType="com.aizuda.bpm.engine.entity.FlwProcess">
     update flw_process
     <set>
       <if test="tenantId != null">
@@ -364,7 +364,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="jp.onehr.elegantapi.bpm.engine.entity.FlwProcess">
+  <update id="updateByPrimaryKey" parameterType="com.aizuda.bpm.engine.entity.FlwProcess">
     update flw_process
     set tenant_id = #{tenantId,jdbcType=VARCHAR},
       create_id = #{createId,jdbcType=VARCHAR},
