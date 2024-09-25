@@ -130,8 +130,6 @@ decorator:
     datasource-proxy:
       multiline: on
       slow-query:
-        threshold: 2
-        log-level:
         logger-name: SLOW-QUERY-LOGGER
         enable-logging: on
       json-format: off

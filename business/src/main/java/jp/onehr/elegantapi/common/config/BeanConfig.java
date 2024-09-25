@@ -1,7 +1,6 @@
 package jp.onehr.elegantapi.common.config;
 
 import cn.hutool.core.collection.CollUtil;
-import com.aizuda.bpm.spring.autoconfigure.FlowLongMybatisPlusConfiguration;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jp.onehr.elegantapi.common.AppConstants;
@@ -11,15 +10,13 @@ import jp.onehr.elegantapi.common.auth.StpMemberUtil;
 import jp.onehr.elegantapi.common.auth.StpUserUtil;
 import jp.onehr.elegantapi.common.utils.LogUtil;
 import jp.onehr.elegantapi.common.utils.SpringUtil;
-import jp.onehr.elegantapi.flowlong.mapper.*;
 import jp.onehr.elegantapi.modules.core.domain.entity.HistClientLoginLogExample;
 import jp.onehr.elegantapi.modules.core.mapper.CustHistClientLoginLogMapper;
 import jp.onehr.elegantapi.modules.core.mapper.HistClientLoginLogMapper;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -28,9 +25,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @MapperScan(basePackages = {
         "jp.onehr.elegantapi.modules.core.mapper"
-})
-@ComponentScan(excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = FlowLongMybatisPlusConfiguration.class)
 })
 public class BeanConfig {
 
@@ -49,7 +43,7 @@ public class BeanConfig {
     }
 
     @Scheduled(fixedRate = 2000)
-    public void testToken() {
+    public void checkValidToken() {
         var clientLoginLogMapper = SpringUtil.getBean(HistClientLoginLogMapper.class);
         var custClientLoginLogMapper = SpringUtil.getBean(CustHistClientLoginLogMapper.class);
 
@@ -80,70 +74,6 @@ public class BeanConfig {
         }
 
         LogUtil.debug("本次定时任务运行共更新{}条数据",updateResult);
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwInstanceMapper> instanceMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwInstanceMapper> factoryBean = new MapperFactoryBean<>(FlwInstanceMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwExtInstanceMapper> extInstanceMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwExtInstanceMapper> factoryBean = new MapperFactoryBean<>(FlwExtInstanceMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwHisInstanceMapper> hisInstanceMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwHisInstanceMapper> factoryBean = new MapperFactoryBean<>(FlwHisInstanceMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwHisTaskActorMapper> hisTaskActorMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwHisTaskActorMapper> factoryBean = new MapperFactoryBean<>(FlwHisTaskActorMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwHisTaskMapper> hisTaskMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwHisTaskMapper> factoryBean = new MapperFactoryBean<>(FlwHisTaskMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwProcessMapper> processMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwProcessMapper> factoryBean = new MapperFactoryBean<>(FlwProcessMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwTaskMapper> taskMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwTaskMapper> factoryBean = new MapperFactoryBean<>(FlwTaskMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public MapperFactoryBean<FlwTaskActorMapper> taskActorMapper(SqlSessionFactory sqlSessionFactory) {
-        MapperFactoryBean<FlwTaskActorMapper> factoryBean = new MapperFactoryBean<>(FlwTaskActorMapper.class);
-        factoryBean.setSqlSessionFactory(sqlSessionFactory);
-        return factoryBean;
     }
 
 }
