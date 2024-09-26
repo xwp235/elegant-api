@@ -1,6 +1,6 @@
 package jp.onehr.elegantapi.common.utils;
 
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class FileUtil {
             }
             detector.dataEnd();
             var encoding = detector.getDetectedCharset();
-            if (StrUtil.isNotBlank(encoding)) {
+            if (StringUtils.isNotBlank(encoding)) {
                 System.out.println("Detected encoding = " + encoding);
             } else {
                 System.out.println("No encoding detected.");

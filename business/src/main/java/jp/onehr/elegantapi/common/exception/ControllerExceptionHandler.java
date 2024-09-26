@@ -2,9 +2,6 @@ package jp.onehr.elegantapi.common.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.SaTokenException;
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import jp.onehr.elegantapi.ElegantApiApplication;
 import jp.onehr.elegantapi.common.AppConstants;
 import jp.onehr.elegantapi.common.advice.IgnoreRespSerializable;
@@ -13,6 +10,9 @@ import jp.onehr.elegantapi.common.resp.JsonResp;
 import jp.onehr.elegantapi.common.utils.LogUtil;
 import jp.onehr.elegantapi.common.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -193,16 +193,16 @@ public class ControllerExceptionHandler {
     }
 
     private RootErrorInfo getRootErrorInfo(Throwable e) {
-        var rootCause = ExceptionUtil.getRootCause(e);
+        var rootCause = ExceptionUtils.getRootCause(e);
         if (Objects.isNull(rootCause)) {
             return null;
         }
         var stackTrace = rootCause.getStackTrace();
-        if (ArrayUtil.isEmpty(stackTrace)) {
+        if (ArrayUtils.isEmpty(stackTrace)) {
             return null;
         }
         // 获取
-        var rootPackage = ClassUtil.getPackage(ElegantApiApplication.class);
+        var rootPackage = ClassUtils.getPackageName(ElegantApiApplication.class);
         return getRootInfoDetail(stackTrace, rootPackage);
     }
 

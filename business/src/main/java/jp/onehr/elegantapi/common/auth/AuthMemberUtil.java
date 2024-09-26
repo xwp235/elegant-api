@@ -2,10 +2,9 @@ package jp.onehr.elegantapi.common.auth;
 
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.session.TokenSign;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.collection.CollUtil;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +43,7 @@ public class AuthMemberUtil extends AuthUtil {
     }
 
     public List<TokenSign> getLoggedInTokenList() {
-        var tokenList = CollUtil.<TokenSign>newArrayList();
+        var tokenList = new ArrayList<TokenSign>();
         for (var sessionId : getLoggedInSessionIdList()) {
             // 根据会话id，查询对应的 SaSession 对象，此处一个 SaSession 对象即代表一个登录的账号
             var session = StpMemberUtil.getSessionBySessionId(sessionId);

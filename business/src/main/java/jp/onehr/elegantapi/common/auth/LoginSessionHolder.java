@@ -1,8 +1,8 @@
 package jp.onehr.elegantapi.common.auth;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class LoginSessionHolder {
 
     public static void put(String sessionId, String device, UserSession client) {
        var session = SESSIONS.get(sessionId);
-       if (MapUtil.isEmpty(session)) {
+       if (MapUtils.isEmpty(session)) {
            var deviceMap = new HashMap<String,Set<UserSession>>();
            var clientSet = new HashSet<UserSession>();
            clientSet.add(client);
@@ -27,7 +27,7 @@ public class LoginSessionHolder {
            SESSIONS.put(sessionId, deviceMap);
        } else {
            var clientList = session.get(device);
-           if (CollUtil.isEmpty(clientList)) {
+           if (CollectionUtils.isEmpty(clientList)) {
                clientList = new HashSet<>();
                clientList.add(client);
                session.put(device, clientList);
@@ -39,15 +39,15 @@ public class LoginSessionHolder {
 
     public static LoginUser get(String device, String clientId) {
         var session = SESSIONS.get(clientId);
-        if (MapUtil.isEmpty(session)) {
+        if (MapUtils.isEmpty(session)) {
             return null;
         }
         var deviceSet = session.get(device);
-        if (CollUtil.isEmpty(deviceSet)) {
+        if (CollectionUtils.isEmpty(deviceSet)) {
             return null;
         }
         for (var socketSession : deviceSet) {
-            if (StrUtil.equals(socketSession.getToken(),clientId)) {
+            if (StringUtils.equals(socketSession.getToken(),clientId)) {
                 return socketSession.getUser();
             }
         }
@@ -56,7 +56,7 @@ public class LoginSessionHolder {
 
     public static void removeBySessionId(String sessionId) {
         var session = SESSIONS.get(sessionId);
-        if (MapUtil.isEmpty(session)) {
+        if (MapUtils.isEmpty(session)) {
             return;
         }
         SESSIONS.remove(sessionId);
@@ -64,30 +64,30 @@ public class LoginSessionHolder {
 
     public static void removeByDevice(String sessionId, String device) {
         var session = SESSIONS.get(sessionId);
-        if (MapUtil.isEmpty(session)) {
+        if (MapUtils.isEmpty(session)) {
             return;
         }
         session.remove(device);
-        if (MapUtil.isEmpty(session)){
+        if (MapUtils.isEmpty(session)){
             SESSIONS.remove(sessionId);
         }
     }
 
     public static void remove(String sessionId, String device, String clientId) {
         var session = SESSIONS.get(sessionId);
-        if (MapUtil.isEmpty(session)) {
+        if (MapUtils.isEmpty(session)) {
             return;
         }
         var deviceSet = session.get(device);
-        if (CollUtil.isEmpty(deviceSet)) {
+        if (CollectionUtils.isEmpty(deviceSet)) {
             return;
         }
-        deviceSet.removeIf(socket -> StrUtil.equals(socket.getToken(), clientId));
+        deviceSet.removeIf(socket -> StringUtils.equals(socket.getToken(), clientId));
         // 清除客户端后如果发现已经没有任何连接，则将其从内存中清除
-        if (CollUtil.isEmpty(deviceSet)) {
+        if (CollectionUtils.isEmpty(deviceSet)) {
             session.remove(device);
         }
-        if (MapUtil.isEmpty(session)) {
+        if (MapUtils.isEmpty(session)) {
             SESSIONS.remove(sessionId);
         }
     }

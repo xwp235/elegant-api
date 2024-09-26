@@ -1,9 +1,9 @@
 package jp.onehr.elegantapi.common.advice;
 
-import cn.hutool.core.util.StrUtil;
 import jp.onehr.elegantapi.common.resp.JsonResp;
 import jp.onehr.elegantapi.common.utils.MessageUtil;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
@@ -22,7 +22,7 @@ public class RespAdvice implements ResponseBodyAdvice<Object> {
         return !(
                 methodParameter.getDeclaringClass().isAnnotationPresent(IgnoreRespSerializable.class) ||
                         (methodParameter.getMethod() !=null && methodParameter.getMethod().isAnnotationPresent(IgnoreRespSerializable.class))
-                        || StrUtil.containsAny(methodParameter.getDeclaringClass().getName(),"WebMvcEndpointHandlerMapping")
+                        || StringUtils.containsAny(methodParameter.getDeclaringClass().getName(),"WebMvcEndpointHandlerMapping")
         );
     }
 

@@ -1,6 +1,5 @@
 package jp.onehr.elegantapi.common.utils;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jp.onehr.elegantapi.common.exception.BusinessException;
 import jp.onehr.elegantapi.common.exception.enums.BusinessExceptionEnum;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class JsonUtil {
      */
     public static String obj2Json(Object object, JsonInclude.Include include) {
         ObjectMapper objectMapper = new ObjectMapper();
-        BeanUtil.copyProperties(getMapper(), objectMapper);
+        BeanUtils.copyProperties(getMapper(), objectMapper);
         objectMapper.setSerializationInclusion(include);
         try {
             return getMapper().writeValueAsString(object);

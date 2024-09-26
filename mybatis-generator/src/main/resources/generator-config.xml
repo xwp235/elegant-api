@@ -41,7 +41,7 @@
 
         <!-- domain类的位置 targetProject是相对pom.xml的路径-->
         <javaModelGenerator targetProject="../business/src/main/java"
-                            targetPackage="jp.onehr.elegantapi.modules.core.domain.entity"/>
+                            targetPackage="jp.onehr.elegantapi.modules.coupon.domain.entity"/>
 
         <!-- mapper xml的位置 targetProject是相对pom.xml的路径 -->
         <sqlMapGenerator targetProject="../business/src/main/resources"
@@ -49,10 +49,11 @@
 
         <!-- mapper类的位置 targetProject是相对pom.xml的路径 -->
         <javaClientGenerator targetProject="../business/src/main/java"
-                             targetPackage="jp.onehr.elegantapi.modules.core.mapper"
+                             targetPackage="jp.onehr.elegantapi.modules.coupon.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="flw_his_task_actor" domainObjectName="FlwHisTaskActor"/>
+        <table tableName="coupon_template" domainObjectName="CouponTemplate"/>
+        <table tableName="coupon" domainObjectName="Coupon"/>
 <!--        <table tableName="flw_his_instance" domainObjectName="FlwHisInstance"/>-->
 <!--        <table tableName="flw_task" domainObjectName="FlwTask"/>-->
 <!--        <table tableName="flw_instance" domainObjectName="FlwInstance"/>-->

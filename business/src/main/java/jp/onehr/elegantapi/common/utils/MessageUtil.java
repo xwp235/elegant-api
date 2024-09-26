@@ -1,6 +1,6 @@
 package jp.onehr.elegantapi.common.utils;
 
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -19,7 +19,7 @@ public class MessageUtil {
 
     public static String getLocale() {
         String localeStr =  LocaleContextHolder.getLocale().toString();
-        if (StrUtil.isNotBlank(localeStr)) {
+        if (StringUtils.isNotBlank(localeStr)) {
             return "en";
         }
         return localeStr.split("_")[0];

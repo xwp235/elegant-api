@@ -1,9 +1,8 @@
 package jp.onehr.elegantapi.common.utils;
 
-import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.ArrayUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -92,8 +91,8 @@ public class RequestUtil {
      */
     public static String getClientIP(HttpServletRequest request, String... otherHeaderNames) {
         String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
-        if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
-            headers = ArrayUtil.addAll(headers, otherHeaderNames);
+        if (ArrayUtils.isNotEmpty(otherHeaderNames)) {
+            headers = ArrayUtils.addAll(headers, otherHeaderNames);
         }
 
         String ip = null;
@@ -110,7 +109,7 @@ public class RequestUtil {
         if (LOCAL_ADDRESS.equals(ip)) {
             return LOCAL_IP;
         }
-        return getClientIPByHeader(request, headers);
+        return getClientIPByHeader(request);
     }
 
     /**
@@ -135,7 +134,7 @@ public class RequestUtil {
     }
 
     private static boolean isNotUnknown(String checkIp) {
-        return StringUtils.hasLength(checkIp) && !"unknown".equalsIgnoreCase(checkIp);
+        return StringUtils.isNotBlank(checkIp)  && !"unknown".equalsIgnoreCase(checkIp);
     }
 
     /**
@@ -147,20 +146,20 @@ public class RequestUtil {
      * </p>
      *
      * @param request     请求对象{@link HttpServletRequest}
-     * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
      * @return IP地址
      */
-    public static String getClientIPByHeader(HttpServletRequest request, String... headerNames) {
-        String ip;
-        for (String header : headerNames) {
-            ip = request.getHeader(header);
-            if (!NetUtil.isUnknown(ip)) {
-                return NetUtil.getMultistageReverseProxyIp(ip);
-            }
+    public static String getClientIPByHeader(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
-
-        ip = request.getRemoteAddr();
-        return NetUtil.getMultistageReverseProxyIp(ip);
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 
 }

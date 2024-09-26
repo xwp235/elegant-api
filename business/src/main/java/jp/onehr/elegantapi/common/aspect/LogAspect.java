@@ -1,8 +1,5 @@
 package jp.onehr.elegantapi.common.aspect;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.useragent.UserAgentUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.onehr.elegantapi.common.AppConstants;
 import jp.onehr.elegantapi.common.SymbolConstants;
@@ -12,6 +9,8 @@ import jp.onehr.elegantapi.common.utils.LogUtil;
 import jp.onehr.elegantapi.common.utils.RequestUtil;
 import jp.onehr.elegantapi.common.utils.TimeUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,13 +26,11 @@ import org.springframework.http.server.PathContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.pattern.PathPatternParser;
+import ua_parser.Parser;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 切面执行顺序: Around > Before > After
@@ -116,7 +113,7 @@ public class LogAspect {
         var log = new LogData();
         var ip = RequestUtil.getClientIP(request);
         var logId = MDC.get(AppConstants.LOG_ID);
-        var isInnerIp = StrUtil.equalsAny(ip, "127.0.0.1","0:0:0:0:0:0:0:1","localhost");
+        var isInnerIp = StringUtils.equalsAny(ip, "127.0.0.1","0:0:0:0:0:0:0:1","localhost");
         var saveIp = isInnerIp ? "127.0.0.1":ip;
         var headerNames = request.getHeaderNames();
         var headerVals = new HashMap<String,Object>();
@@ -126,8 +123,9 @@ public class LogAspect {
             headerVals.put(name,value);
         }
         var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-        var ua = UserAgentUtil.parse(userAgent);
-        var device = ua.getPlatform().toString();
+        var uaParser = new Parser();
+        var ua = uaParser.parse(userAgent);
+        var device = ua.os.family;
         log
                 .setLogId(Long.parseLong(logId))
                 .setIp(saveIp)
@@ -143,7 +141,7 @@ public class LogAspect {
         if (!headerVals.isEmpty()){
             log.setHeaders(objectMapper.writeValueAsString(headerVals));
         }
-        if (StrUtil.isNotBlank(parameters)){
+        if (StringUtils.isNotBlank(parameters)){
             log.setParameters(parameters);
         } else {
             log.setParameters(String.valueOf(SymbolConstants.STRIKE));
@@ -210,8 +208,8 @@ public class LogAspect {
         variables.forEach((key,val) -> {
             if (isMultipartFileList(val)) {
                   var fileList = (List<MultipartFile>)val;
-                  var fileStrList = CollUtil.<String>newArrayList();
-                  if (CollUtil.isNotEmpty(fileList)) {
+                  var fileStrList = new ArrayList<String>();
+                  if (CollectionUtils.isNotEmpty(fileList)) {
                       for (var multipartFile : fileList) {
                           fileStrList.add(multipartFile.getOriginalFilename());
                       }

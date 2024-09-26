@@ -1,7 +1,6 @@
 package jp.onehr.elegantapi.business;
 
 import cn.dev33.satoken.stp.SaLoginModel;
-import cn.hutool.core.collection.CollUtil;
 import jp.onehr.elegantapi.common.AppConstants;
 import jp.onehr.elegantapi.common.utils.TimeUtil;
 import jp.onehr.elegantapi.modules.core.domain.entity.HistClientLoginLog;
@@ -13,6 +12,7 @@ import jp.onehr.elegantapi.modules.core.req.BasicLoginReq;
 import jp.onehr.elegantapi.common.auth.*;
 import jp.onehr.elegantapi.common.utils.IdWorkerUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -123,7 +123,7 @@ public class AuthBusiness {
                 .andLoginTypeEqualTo(loginType);
         clientLoginLogExample.setOrderByClause("id desc");
         var loginLogList = histClientLoginLogMapper.selectByExample(clientLoginLogExample);
-        if (CollUtil.isNotEmpty(loginLogList)) {
+        if (CollectionUtils.isNotEmpty(loginLogList)) {
             var loginLog = loginLogList.getFirst();
             var updateLoginLog = new HistClientLoginLog();
             updateLoginLog.setId(loginLog.getId());

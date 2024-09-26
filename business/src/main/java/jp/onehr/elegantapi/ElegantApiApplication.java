@@ -1,9 +1,9 @@
 package jp.onehr.elegantapi;
 
-import cn.hutool.core.util.StrUtil;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.github.cdimascio.dotenv.DotenvException;
 import jp.onehr.elegantapi.common.utils.LogUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -25,7 +25,7 @@ public class ElegantApiApplication {
             // 加载相应的.env文件
             var envName = System.getProperty("spring.profiles.active", "dev");
             var filepath = System.getProperty("env.filepath");
-            if (StrUtil.isBlank(filepath)) {
+            if (StringUtils.isBlank(filepath)) {
                 filepath = System.getProperty("user.dir");
             }
             // 获取当前系统属性

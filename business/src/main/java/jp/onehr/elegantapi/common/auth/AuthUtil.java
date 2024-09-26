@@ -2,9 +2,9 @@ package jp.onehr.elegantapi.common.auth;
 
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.session.TokenSign;
-import cn.hutool.core.collection.CollUtil;
 import jp.onehr.elegantapi.common.AppConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +51,7 @@ abstract class AuthUtil {
     }
 
     public List<String> getLoggedInClientIdList() {
-        var clientIdList = CollUtil.<String>newArrayList();
+        var clientIdList = new ArrayList<String>();
         for (var tokenSign : getLoggedInTokenList()) {
             clientIdList.add(tokenSign.getValue());
         }

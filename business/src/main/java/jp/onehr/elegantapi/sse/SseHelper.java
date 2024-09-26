@@ -1,8 +1,5 @@
 package jp.onehr.elegantapi.sse;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpStatus;
 import jp.onehr.elegantapi.common.AppConstants;
 import jp.onehr.elegantapi.common.ErrorConstants;
 import jp.onehr.elegantapi.common.auth.AuthMemberUtil;
@@ -10,6 +7,9 @@ import jp.onehr.elegantapi.common.auth.AuthUserUtil;
 import jp.onehr.elegantapi.common.exception.SystemException;
 import jp.onehr.elegantapi.common.utils.LogUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -36,7 +36,7 @@ public class SseHelper {
      */
     public SseEmitter open(String type) {
         var clientId = "";
-        if (StrUtil.equals(type,AppConstants.LOGIN_USER_MEMBER)) {
+        if (StringUtils.equals(type,AppConstants.LOGIN_USER_MEMBER)) {
             clientId = authMemberUtil.getClientId();
         } else {
             clientId = authUserUtil.getClientId();
@@ -51,7 +51,7 @@ public class SseHelper {
      */
     public void close(String type) {
         var clientId = "";
-        if (StrUtil.equals(type,AppConstants.LOGIN_USER_MEMBER)) {
+        if (StringUtils.equals(type,AppConstants.LOGIN_USER_MEMBER)) {
             clientId = authMemberUtil.getClientId();
         } else {
             clientId = authUserUtil.getClientId();
@@ -69,7 +69,7 @@ public class SseHelper {
      * @param message 消息内容
      */
     public void send2AllClients(BroadcastMessage message) {
-        if (MapUtil.isEmpty(SSE_CACHE)) {
+        if (MapUtils.isEmpty(SSE_CACHE)) {
             return;
         }
         // 判断发送的消息是否为空
@@ -150,11 +150,11 @@ public class SseHelper {
         }
 
         SseEmitter.SseEventBuilder sendData;
-        if (StrUtil.isNotBlank(eventName)) {
-            sendData = SseEmitter.event().name(eventName).id(String.valueOf(HttpStatus.HTTP_OK))
+        if (StringUtils.isNotBlank(eventName)) {
+            sendData = SseEmitter.event().name(eventName).id(String.valueOf(HttpStatus.OK))
                     .data(message, MediaType.APPLICATION_JSON);
         } else {
-            sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK))
+            sendData = SseEmitter.event().id(String.valueOf(HttpStatus.OK))
                     .data(message, MediaType.APPLICATION_JSON);
         }
         try {

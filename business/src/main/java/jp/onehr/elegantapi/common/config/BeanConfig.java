@@ -1,6 +1,5 @@
 package jp.onehr.elegantapi.common.config;
 
-import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jp.onehr.elegantapi.common.AppConstants;
@@ -13,6 +12,7 @@ import jp.onehr.elegantapi.common.utils.SpringUtil;
 import jp.onehr.elegantapi.modules.core.domain.entity.HistClientLoginLogExample;
 import jp.onehr.elegantapi.modules.core.mapper.CustHistClientLoginLogMapper;
 import jp.onehr.elegantapi.modules.core.mapper.HistClientLoginLogMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +20,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.ArrayList;
+
 
 @EnableScheduling
 @Configuration
 @MapperScan(basePackages = {
-        "jp.onehr.elegantapi.modules.core.mapper"
+        "jp.onehr.elegantapi.modules.core.mapper",
+        "jp.onehr.elegantapi.modules.coupon.mapper"
 })
 public class BeanConfig {
 
@@ -52,7 +55,7 @@ public class BeanConfig {
         criteria.andLogoutTimeIsNull();
         var clientList = clientLoginLogMapper.selectByExample(clientLoginLogExample);
 
-        var shouldUpdateClientLoginLogIdList = CollUtil.<Long>newArrayList();
+        var shouldUpdateClientLoginLogIdList = new ArrayList<Long>();
         for (var clientLoginLog : clientList) {
             var token = clientLoginLog.getToken();
             var loginType = clientLoginLog.getLoginType();
@@ -69,7 +72,7 @@ public class BeanConfig {
         }
 
         var updateResult = 0;
-        if (CollUtil.isNotEmpty(shouldUpdateClientLoginLogIdList)) {
+        if (CollectionUtils.isNotEmpty(shouldUpdateClientLoginLogIdList)) {
             updateResult = custClientLoginLogMapper.updateLogoutTime(shouldUpdateClientLoginLogIdList);
         }
 

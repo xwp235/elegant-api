@@ -3,9 +3,9 @@
  */
 package jp.onehr.elegantapi.flowlong.mapper;
 
-import cn.hutool.core.util.StrUtil;
 import com.aizuda.bpm.engine.entity.FlwProcess;
 import jp.onehr.elegantapi.flowlong.example.FlwProcessExample;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface FlwProcessMapper {
     default List<FlwProcess> selectListByProcessKey(String tenantId, String processKey) {
         var flwProcessExample = new FlwProcessExample();
         var criteria = flwProcessExample.createCriteria().andProcessKeyEqualTo(processKey);
-        if (StrUtil.isNotBlank(tenantId)) {
+        if (StringUtils.isNotBlank(tenantId)) {
             criteria.andTenantIdEqualTo(tenantId);
         }
         flwProcessExample.setOrderByClause("process_version desc");
