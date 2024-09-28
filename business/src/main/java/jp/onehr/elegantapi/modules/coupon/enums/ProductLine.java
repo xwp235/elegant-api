@@ -13,9 +13,9 @@ public enum ProductLine {
     DA_BAO("大宝",2);
 
     private final String desc;
-    private final int code;
+    private final long code;
 
-    public ProductLine of(int code) {
+    public static ProductLine of(long code) {
         return Stream
                 .of(values())
                 .filter(productLine-> productLine.code == code)

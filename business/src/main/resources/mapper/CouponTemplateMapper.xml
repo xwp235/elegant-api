@@ -76,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tpl_key, creator_id, available, expired, `name`, logo, intro, category, product_line, 
-    coupon_count, create_time, `usage`, `rule`
+    id, tpl_key, creator_id, available, expired, "name", logo, intro, category, product_line, 
+    coupon_count, create_time, "usage", "rule"
   </sql>
   <select id="selectByExample" parameterType="jp.onehr.elegantapi.modules.coupon.domain.entity.CouponTemplateExample" resultMap="BaseResultMap">
     select
@@ -111,10 +111,10 @@
   </delete>
   <insert id="insert" parameterType="jp.onehr.elegantapi.modules.coupon.domain.entity.CouponTemplate">
     insert into coupon_template (id, tpl_key, creator_id, 
-      available, expired, `name`, logo, 
+      available, expired, "name", logo, 
       intro, category, product_line, 
-      coupon_count, create_time, `usage`, 
-      `rule`)
+      coupon_count, create_time, "usage", 
+      "rule")
     values (#{id,jdbcType=BIGINT}, #{tplKey,jdbcType=VARCHAR}, #{creatorId,jdbcType=BIGINT}, 
       #{available,jdbcType=BIT}, #{expired,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
       #{intro,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{productLine,jdbcType=BIGINT}, 
@@ -140,7 +140,7 @@
         expired,
       </if>
       <if test="name != null">
-        `name`,
+        "name",
       </if>
       <if test="logo != null">
         logo,
@@ -161,10 +161,10 @@
         create_time,
       </if>
       <if test="usage != null">
-        `usage`,
+        "usage",
       </if>
       <if test="rule != null">
-        `rule`,
+        "rule",
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -237,7 +237,7 @@
         expired = #{row.expired,jdbcType=BIT},
       </if>
       <if test="row.name != null">
-        `name` = #{row.name,jdbcType=VARCHAR},
+        "name" = #{row.name,jdbcType=VARCHAR},
       </if>
       <if test="row.logo != null">
         logo = #{row.logo,jdbcType=VARCHAR},
@@ -258,10 +258,10 @@
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="row.usage != null">
-        `usage` = #{row.usage,jdbcType=INTEGER},
+        "usage" = #{row.usage,jdbcType=INTEGER},
       </if>
       <if test="row.rule != null">
-        `rule` = #{row.rule,jdbcType=VARCHAR},
+        "rule" = #{row.rule,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="example != null">
@@ -275,15 +275,15 @@
       creator_id = #{row.creatorId,jdbcType=BIGINT},
       available = #{row.available,jdbcType=BIT},
       expired = #{row.expired,jdbcType=BIT},
-      `name` = #{row.name,jdbcType=VARCHAR},
+      "name" = #{row.name,jdbcType=VARCHAR},
       logo = #{row.logo,jdbcType=VARCHAR},
       intro = #{row.intro,jdbcType=VARCHAR},
       category = #{row.category,jdbcType=VARCHAR},
       product_line = #{row.productLine,jdbcType=BIGINT},
       coupon_count = #{row.couponCount,jdbcType=INTEGER},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
-      `usage` = #{row.usage,jdbcType=INTEGER},
-      `rule` = #{row.rule,jdbcType=VARCHAR}
+      "usage" = #{row.usage,jdbcType=INTEGER},
+      "rule" = #{row.rule,jdbcType=VARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -304,7 +304,7 @@
         expired = #{expired,jdbcType=BIT},
       </if>
       <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
+        "name" = #{name,jdbcType=VARCHAR},
       </if>
       <if test="logo != null">
         logo = #{logo,jdbcType=VARCHAR},
@@ -325,10 +325,10 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="usage != null">
-        `usage` = #{usage,jdbcType=INTEGER},
+        "usage" = #{usage,jdbcType=INTEGER},
       </if>
       <if test="rule != null">
-        `rule` = #{rule,jdbcType=VARCHAR},
+        "rule" = #{rule,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -339,15 +339,15 @@
       creator_id = #{creatorId,jdbcType=BIGINT},
       available = #{available,jdbcType=BIT},
       expired = #{expired,jdbcType=BIT},
-      `name` = #{name,jdbcType=VARCHAR},
+      "name" = #{name,jdbcType=VARCHAR},
       logo = #{logo,jdbcType=VARCHAR},
       intro = #{intro,jdbcType=VARCHAR},
       category = #{category,jdbcType=VARCHAR},
       product_line = #{productLine,jdbcType=BIGINT},
       coupon_count = #{couponCount,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      `usage` = #{usage,jdbcType=INTEGER},
-      `rule` = #{rule,jdbcType=VARCHAR}
+      "usage" = #{usage,jdbcType=INTEGER},
+      "rule" = #{rule,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

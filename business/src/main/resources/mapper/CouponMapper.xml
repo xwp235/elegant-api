@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tpl_id, user_id, coupon_code, assign_time, `status`
+    id, tpl_id, user_id, coupon_code, assign_time, "status"
   </sql>
   <select id="selectByExample" parameterType="jp.onehr.elegantapi.modules.coupon.domain.entity.CouponExample" resultMap="BaseResultMap">
     select
@@ -102,7 +102,7 @@
   </delete>
   <insert id="insert" parameterType="jp.onehr.elegantapi.modules.coupon.domain.entity.Coupon">
     insert into coupon (id, tpl_id, user_id, 
-      coupon_code, assign_time, `status`
+      coupon_code, assign_time, "status"
       )
     values (#{id,jdbcType=BIGINT}, #{tplId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{couponCode,jdbcType=VARCHAR}, #{assignTime,jdbcType=TIMESTAMP}, #{status,jdbcType=SMALLINT}
@@ -127,7 +127,7 @@
         assign_time,
       </if>
       <if test="status != null">
-        `status`,
+        "status",
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -176,7 +176,7 @@
         assign_time = #{row.assignTime,jdbcType=TIMESTAMP},
       </if>
       <if test="row.status != null">
-        `status` = #{row.status,jdbcType=SMALLINT},
+        "status" = #{row.status,jdbcType=SMALLINT},
       </if>
     </set>
     <if test="example != null">
@@ -190,7 +190,7 @@
       user_id = #{row.userId,jdbcType=BIGINT},
       coupon_code = #{row.couponCode,jdbcType=VARCHAR},
       assign_time = #{row.assignTime,jdbcType=TIMESTAMP},
-      `status` = #{row.status,jdbcType=SMALLINT}
+      "status" = #{row.status,jdbcType=SMALLINT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -211,7 +211,7 @@
         assign_time = #{assignTime,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null">
-        `status` = #{status,jdbcType=SMALLINT},
+        "status" = #{status,jdbcType=SMALLINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -222,7 +222,7 @@
       user_id = #{userId,jdbcType=BIGINT},
       coupon_code = #{couponCode,jdbcType=VARCHAR},
       assign_time = #{assignTime,jdbcType=TIMESTAMP},
-      `status` = #{status,jdbcType=SMALLINT}
+      "status" = #{status,jdbcType=SMALLINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

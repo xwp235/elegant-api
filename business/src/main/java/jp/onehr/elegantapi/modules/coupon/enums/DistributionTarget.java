@@ -16,7 +16,7 @@ public enum DistributionTarget {
     private final String desc;
     private final int code;
 
-    public DistributionTarget of(int code) {
+    public static DistributionTarget of(int code) {
         return Stream
                 .of(values())
                 .filter(productLine-> productLine.code == code)

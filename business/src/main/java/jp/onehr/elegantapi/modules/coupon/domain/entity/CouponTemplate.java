@@ -3,7 +3,7 @@ package jp.onehr.elegantapi.modules.coupon.domain.entity;
 import java.time.ZonedDateTime;
 
 /**
-* Created by Mybatis Generator on 2024/09/26 10:29
+* Created by Mybatis Generator on 2024/09/28 20:25
 */
 public class CouponTemplate {
     /**

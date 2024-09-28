@@ -416,72 +416,72 @@ public class CouponTemplateExample {
         }
 
         public Criteria andNameIsNull() {
-            addCriterion("`name` is null");
+            addCriterion("\"name\" is null");
             return (Criteria) this;
         }
 
         public Criteria andNameIsNotNull() {
-            addCriterion("`name` is not null");
+            addCriterion("\"name\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andNameEqualTo(String value) {
-            addCriterion("`name` =", value, "name");
+            addCriterion("\"name\" =", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameNotEqualTo(String value) {
-            addCriterion("`name` <>", value, "name");
+            addCriterion("\"name\" <>", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameGreaterThan(String value) {
-            addCriterion("`name` >", value, "name");
+            addCriterion("\"name\" >", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`name` >=", value, "name");
+            addCriterion("\"name\" >=", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameLessThan(String value) {
-            addCriterion("`name` <", value, "name");
+            addCriterion("\"name\" <", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameLessThanOrEqualTo(String value) {
-            addCriterion("`name` <=", value, "name");
+            addCriterion("\"name\" <=", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameLike(String value) {
-            addCriterion("`name` like", value, "name");
+            addCriterion("\"name\" like", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameNotLike(String value) {
-            addCriterion("`name` not like", value, "name");
+            addCriterion("\"name\" not like", value, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameIn(List<String> values) {
-            addCriterion("`name` in", values, "name");
+            addCriterion("\"name\" in", values, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameNotIn(List<String> values) {
-            addCriterion("`name` not in", values, "name");
+            addCriterion("\"name\" not in", values, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameBetween(String value1, String value2) {
-            addCriterion("`name` between", value1, value2, "name");
+            addCriterion("\"name\" between", value1, value2, "name");
             return (Criteria) this;
         }
 
         public Criteria andNameNotBetween(String value1, String value2) {
-            addCriterion("`name` not between", value1, value2, "name");
+            addCriterion("\"name\" not between", value1, value2, "name");
             return (Criteria) this;
         }
 
@@ -876,132 +876,132 @@ public class CouponTemplateExample {
         }
 
         public Criteria andUsageIsNull() {
-            addCriterion("`usage` is null");
+            addCriterion("\"usage\" is null");
             return (Criteria) this;
         }
 
         public Criteria andUsageIsNotNull() {
-            addCriterion("`usage` is not null");
+            addCriterion("\"usage\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andUsageEqualTo(Integer value) {
-            addCriterion("`usage` =", value, "usage");
+            addCriterion("\"usage\" =", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageNotEqualTo(Integer value) {
-            addCriterion("`usage` <>", value, "usage");
+            addCriterion("\"usage\" <>", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageGreaterThan(Integer value) {
-            addCriterion("`usage` >", value, "usage");
+            addCriterion("\"usage\" >", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`usage` >=", value, "usage");
+            addCriterion("\"usage\" >=", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageLessThan(Integer value) {
-            addCriterion("`usage` <", value, "usage");
+            addCriterion("\"usage\" <", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageLessThanOrEqualTo(Integer value) {
-            addCriterion("`usage` <=", value, "usage");
+            addCriterion("\"usage\" <=", value, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageIn(List<Integer> values) {
-            addCriterion("`usage` in", values, "usage");
+            addCriterion("\"usage\" in", values, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageNotIn(List<Integer> values) {
-            addCriterion("`usage` not in", values, "usage");
+            addCriterion("\"usage\" not in", values, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageBetween(Integer value1, Integer value2) {
-            addCriterion("`usage` between", value1, value2, "usage");
+            addCriterion("\"usage\" between", value1, value2, "usage");
             return (Criteria) this;
         }
 
         public Criteria andUsageNotBetween(Integer value1, Integer value2) {
-            addCriterion("`usage` not between", value1, value2, "usage");
+            addCriterion("\"usage\" not between", value1, value2, "usage");
             return (Criteria) this;
         }
 
         public Criteria andRuleIsNull() {
-            addCriterion("`rule` is null");
+            addCriterion("\"rule\" is null");
             return (Criteria) this;
         }
 
         public Criteria andRuleIsNotNull() {
-            addCriterion("`rule` is not null");
+            addCriterion("\"rule\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andRuleEqualTo(String value) {
-            addCriterion("`rule` =", value, "rule");
+            addCriterion("\"rule\" =", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleNotEqualTo(String value) {
-            addCriterion("`rule` <>", value, "rule");
+            addCriterion("\"rule\" <>", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleGreaterThan(String value) {
-            addCriterion("`rule` >", value, "rule");
+            addCriterion("\"rule\" >", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleGreaterThanOrEqualTo(String value) {
-            addCriterion("`rule` >=", value, "rule");
+            addCriterion("\"rule\" >=", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleLessThan(String value) {
-            addCriterion("`rule` <", value, "rule");
+            addCriterion("\"rule\" <", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleLessThanOrEqualTo(String value) {
-            addCriterion("`rule` <=", value, "rule");
+            addCriterion("\"rule\" <=", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleLike(String value) {
-            addCriterion("`rule` like", value, "rule");
+            addCriterion("\"rule\" like", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleNotLike(String value) {
-            addCriterion("`rule` not like", value, "rule");
+            addCriterion("\"rule\" not like", value, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleIn(List<String> values) {
-            addCriterion("`rule` in", values, "rule");
+            addCriterion("\"rule\" in", values, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleNotIn(List<String> values) {
-            addCriterion("`rule` not in", values, "rule");
+            addCriterion("\"rule\" not in", values, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleBetween(String value1, String value2) {
-            addCriterion("`rule` between", value1, value2, "rule");
+            addCriterion("\"rule\" between", value1, value2, "rule");
             return (Criteria) this;
         }
 
         public Criteria andRuleNotBetween(String value1, String value2) {
-            addCriterion("`rule` not between", value1, value2, "rule");
+            addCriterion("\"rule\" not between", value1, value2, "rule");
             return (Criteria) this;
         }
     }
