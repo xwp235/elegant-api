@@ -76,4 +76,9 @@ public class CouponTemplateDaoImpl implements CouponTemplateDao {
         return count;
     }
 
+    @Override
+    public int updateById(CouponTemplate couponTemplate) {
+        return couponTemplateMapper.updateByPrimaryKeySelective(couponTemplate);
+    }
+
 }

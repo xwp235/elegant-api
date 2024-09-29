@@ -38,7 +38,7 @@ public class CouponTemplateService {
                 req.getRule());
         var newTpl = bo.newCouponTemplate();
         couponTemplateDao.save(newTpl);
-        asyncService.createCouponCodesByCouponTemplate(newTpl);
+        asyncService.createCouponCodesByCouponTemplate(couponTemplateDao.findById(newTpl.getId()));
         return newTpl;
     }
 
@@ -74,7 +74,7 @@ public class CouponTemplateService {
      * 获取优惠券模板ids到CouponTemplateVO的映射
      * @param ids 优惠券模板列表
      */
-    Map<Long, CouponTemplateVO> mapIds2CouponTemplateVO(List<Long> ids) {
+    public Map<Long, CouponTemplateVO> mapIds2CouponTemplateVO(List<Long> ids) {
        var templates = couponTemplateDao.findByIds(ids);
         return templates.stream().map(item -> {
             var vo = new CouponTemplateVO();

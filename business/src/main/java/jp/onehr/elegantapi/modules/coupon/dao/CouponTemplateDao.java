@@ -20,4 +20,7 @@ public interface CouponTemplateDao {
   List<CouponTemplate> findByIds(List<Long> ids);
 
   int saveAll(List<CouponTemplate> expiredTemplates);
+
+  int updateById(CouponTemplate couponTemplate);
+
 }

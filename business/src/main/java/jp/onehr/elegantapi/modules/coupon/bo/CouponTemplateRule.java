@@ -51,7 +51,8 @@ public class CouponTemplateRule {
     }
 
     @AllArgsConstructor
-    static class DiscountRule {
+    @Data
+    public static class DiscountRule {
         /*
         * 折扣大小：满减(20)，百分比(2折),立减(-10元)
         * */
@@ -70,7 +71,8 @@ public class CouponTemplateRule {
      * 使用范围
      */
     @AllArgsConstructor
-    static class UsageRule {
+    @Data
+    public static class UsageRule {
 
         private final String province;
         private final String city;

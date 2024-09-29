@@ -91,7 +91,8 @@ management:
       enabled: off
 logging:
   level:
-    jp.onehr.elegantapi.business.auth.mapper: TRACE
+    jp.onehr.elegantapi.modules.core.mapper: TRACE
+    jp.onehr.elegantapi.modules.coupon.mapper: TRACE
     web: DEBUG
 info:
   app:

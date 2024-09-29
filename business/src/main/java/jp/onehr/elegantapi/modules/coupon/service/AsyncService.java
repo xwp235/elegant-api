@@ -33,7 +33,7 @@ public class AsyncService {
                 couponTemplate.getId());
         cache.put(cacheKey, couponCodes);
         couponTemplate.setAvailable(true);
-        couponTemplateDao.save(couponTemplate);
+        couponTemplateDao.updateById(couponTemplate);
         LogUtil.info("Generated coupon code for coupon template {}, code list: {}", couponTemplate.getId(),couponCodes);
     }
 
